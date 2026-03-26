@@ -1,0 +1,6 @@
+{
+  "venvPath": ".",
+  "venv": "pose_env",
+  "pythonVersion": "3.10",
+  "typeCheckingMode": "off"
+}

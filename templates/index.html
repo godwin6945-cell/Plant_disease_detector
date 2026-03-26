@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoseAI Suite — AI Pose Analysis Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">🦴</span>
+                <span class="logo-text">PoseAI Suite</span>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab" data-module="landing" data-icon="🏠">
+                    <span class="tab-icon">🏠</span> Home
+                </button>
+                <button class="nav-tab" data-module="posture" data-icon="🦴">
+                    <span class="tab-icon">🦴</span> PosturePro
+                </button>
+                <button class="nav-tab" data-module="fitness" data-icon="💪">
+                    <span class="tab-icon">💪</span> FitAI Coach
+                </button>
+                <button class="nav-tab" data-module="safety" data-icon="⚠️">
+                    <span class="tab-icon">⚠️</span> SafetyAI
+                </button>
+                <button class="nav-tab" data-module="sports" data-icon="🏆">
+                    <span class="tab-icon">🏆</span> SportsVision
+                </button>
+                <button class="nav-tab" data-module="games" data-icon="🎮">
+                    <span class="tab-icon">🎮</span> PosePlay
+                </button>
+            </div>
+
+            <div class="nav-right">
+                <div class="status-badge" id="cameraStatus">
+                    <span class="dot"></span> Camera
+                </div>
+                <div class="fps-badge" id="fpsBadge">0 FPS</div>
+                <button class="settings-btn" id="settingsBtn" title="Settings">⚙️</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Landing Page -->
+        <section class="module-view" id="landing-module" style="display: flex;">
+            <div class="landing-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">AI Pose Analysis Suite</h1>
+                    <p class="hero-subtitle">5 Real-World Solutions Powered by Computer Vision</p>
+                    
+                    <button class="cta-button" id="startCameraBtn">
+                        <span class="cta-icon">📷</span> Start Camera
+                    </button>
+
+                    <div class="how-it-works">
+                        <h3>How It Works</h3>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-icon">1️⃣</div>
+                                <div class="step-title">Camera</div>
+                                <div class="step-desc">Point your webcam</div>
+                            </div>
+                            <div class="step-arrow">→</div>
+                            <div class="step">
+                                <div class="step-icon">2️⃣</div>
+                                <div class="step-title">AI Analysis</div>
+                                <div class="step-desc">Real-time pose detection</div>
+                            </div>
+                            <div class="step-arrow">→</div>
+                            <div class="step">
+                                <div class="step-icon">3️⃣</div>
+                                <div class="step-title">Insights</div>
+                                <div class="step-desc">Actionable feedback</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="system-info">
+                        <h4>System Status</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Backend:</span>
+                                <span class="info-value">AMD WebGL</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Model:</span>
+                                <span class="info-value">MoveNet Lightning</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Inference:</span>
+                                <span class="info-value" id="inferenceTime">-- ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card" data-module="posture">
+                        <div class="feature-icon">🦴</div>
+                        <h4>PosturePro</h4>
+                        <p>Real-time posture coaching with live scoring and form correction</p>
+                    </div>
+                    <div class="feature-card" data-module="fitness">
+                        <div class="feature-icon">💪</div>
+                        <h4>FitAI Coach</h4>
+                        <p>AI personal trainer with rep counting and form analysis</p>
+                    </div>
+                    <div class="feature-card" data-module="safety">
+                        <div class="feature-icon">⚠️</div>
+                        <h4>SafetyAI</h4>
+                        <p>Workplace safety monitoring with fall detection</p>
+                    </div>
+                    <div class="feature-card" data-module="sports">
+                        <div class="feature-icon">🏆</div>
+                        <h4>SportsVision</h4>
+                        <p>Sports performance analysis and metrics tracking</p>
+                    </div>
+                    <div class="feature-card" data-module="games">
+                        <div class="feature-icon">🎮</div>
+                        <h4>PosePlay</h4>
+                        <p>Interactive games and entertainment experiences</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Camera Permission Screen -->
+        <section class="module-view" id="permission-screen" style="display: none;">
+            <div class="permission-container">
+                <div class="permission-content">
+                    <div class="permission-icon">📷</div>
+                    <h2>Camera Permission Required</h2>
+                    <p>PoseAI needs access to your webcam to work</p>
+                    
+                    <div class="permission-steps">
+                        <div class="perm-step">
+                            <span class="perm-number">1</span>
+                            <div>Click "Allow" when your browser asks for camera access</div>
+                        </div>
+                        <div class="perm-step">
+                            <span class="perm-number">2</span>
+                            <div>Look for the padlock icon 🔒 at the top of your browser</div>
+                        </div>
+                        <div class="perm-step">
+                            <span class="perm-number">3</span>
+                            <div>Click the padlock → Camera → Allow</div>
+                        </div>
+                    </div>
+                    
+                    <button class="permission-button" id="requestCameraBtn">
+                        Allow Camera Access
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Screen -->
+        <section class="module-view" id="loading-screen" style="display: none;">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <h2>Loading PoseAI</h2>
+                <p id="loadingMessage">Initializing TensorFlow.js with AMD WebGL...</p>
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loadingProgress"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Camera View Container -->
+        <div class="main-camera-area" id="mainCameraArea" style="display:none;">
+            <div class="camera-container">
+                <video id="webcam" autoplay playsinline muted></video>
+                <canvas id="canvas"></canvas>
+                <div class="camera-overlay" id="cameraOverlay"></div>
+            </div>
+
+            <!-- Module 1: PosturePro -->
+            <section class="module-view" id="posture-module" style="display: none;">
+                <div class="module-header">
+                    <h2 class="module-title">🦴 PosturePro — Posture Coach</h2>
+                    <p class="module-description">Real-time posture analysis and coaching</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-left">
+                        <canvas id="postureCanvas" class="pose-canvas"></canvas>
+                    </div>
+                    
+                    <div class="module-right">
+                        <div class="posture-dashboard">
+                            <div class="score-gauge">
+                                <div class="gauge-value">
+                                    <span id="postureScore">0</span>
+                                    <span class="gauge-percent">%</span>
+                                </div>
+                                <div class="gauge-label">Posture Score</div>
+                                <div class="gauge-ring" id="gaugeRing"></div>
+                            </div>
+
+                            <div class="posture-status" id="postureStatus">
+                                <div class="status-indicator good"></div>
+                                <span>Waiting for pose...</span>
+                            </div>
+
+                            <div class="posture-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Neck Angle</span>
+                                    <span class="metric-value" id="neckAngle">--°</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Spine Angle</span>
+                                    <span class="metric-value" id="spineAngle">--°</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Shoulder Tilt</span>
+                                    <span class="metric-value" id="shoulderTilt">--°</span>
+                                </div>
+                            </div>
+
+                            <div class="posture-tips" id="postureTips">
+                                <h4>Live Coaching Tips</h4>
+                                <ul id="tipsContainer"></ul>
+                            </div>
+
+                            <div class="session-controls">
+                                <button class="control-btn" id="postureStartBtn">▶ Start Session</button>
+                                <button class="control-btn secondary" id="postureResetBtn">↻ Reset</button>
+                            </div>
+
+                            <div class="session-timer" id="postureTimer" style="display: none;">
+                                <span id="timerDisplay">00:00</span>
+                            </div>
+
+                            <div class="session-stats" id="postureStats" style="display: none;">
+                                <h4>Session Report</h4>
+                                <p><strong>Good Posture:</strong> <span id="goodPosturePercent">0</span>%</p>
+                                <p><strong>Alerts Triggered:</strong> <span id="alertCount">0</span></p>
+                                <p><strong>Duration:</strong> <span id="sessionDuration">0:00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module 2: FitAI Coach -->
+            <section class="module-view" id="fitness-module" style="display: none;">
+                <div class="module-header">
+                    <h2 class="module-title">💪 FitAI Coach — Your AI Trainer</h2>
+                    <p class="module-description">Real-time rep counting and form analysis</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-left">
+                        <canvas id="fitnessCanvas" class="pose-canvas"></canvas>
+                    </div>
+                    
+                    <div class="module-right">
+                        <div class="fitness-dashboard">
+                            <!-- Category Tabs -->
+                            <div class="cat-tabs">
+                                <button class="cat-tab active" data-cat="fitness">💪 Fitness</button>
+                                <button class="cat-tab" data-cat="physio">🏥 Physiotherapy</button>
+                                <button class="cat-tab" data-cat="yoga">🧘 Yoga</button>
+                            </div>
+
+                            <div class="exercise-selector">
+                                <div class="exercise-buttons" id="exerciseGrid"></div>
+                            </div>
+
+                            <!-- Rep counter (fitness only) -->
+                            <div id="repCounterBlock">
+                                <div class="rep-counter">
+                                    <div class="counter-display">
+                                        <div class="counter-value" id="repCount">0</div>
+                                        <div class="counter-label">Reps</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hold timer (yoga / physio) -->
+                            <div id="holdTimerBlock" style="display:none;">
+                                <div class="rep-counter">
+                                    <div class="counter-display">
+                                        <div class="counter-value" id="holdTime">0.0s</div>
+                                        <div class="counter-label">Hold Time</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-score">
+                                <div class="score-bar" id="formScoreBar"></div>
+                                <div class="score-label">Form Quality: <span id="formScore">0</span>%</div>
+                            </div>
+
+                            <div class="fitness-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Angle</span>
+                                    <span class="metric-value" id="exerciseAngle">--°</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Status</span>
+                                    <span class="metric-value" id="repStatus">--</span>
+                                </div>
+                            </div>
+
+                            <div class="form-feedback" id="formFeedback">
+                                <h4>Form Analysis</h4>
+                                <p id="formMessage">Select a category and exercise...</p>
+                            </div>
+
+                            <div class="session-controls">
+                                <button class="control-btn" id="fitnessStartBtn">▶ Start Workout</button>
+                                <button class="control-btn secondary" id="fitnessResetBtn">↻ Reset</button>
+                            </div>
+
+                            <div class="workout-session" id="workoutSession" style="display: none;">
+                                <h4>Session</h4>
+                                <div class="session-info">
+                                    <p>Total: <strong id="totalReps">0</strong></p>
+                                    <p>Perfect: <strong id="perfectCount">0</strong></p>
+                                    <p>Duration: <span id="workoutDuration">0:00</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module 3: SafetyAI -->
+            <section class="module-view" id="safety-module" style="display: none;">
+                <div class="module-header">
+                    <h2 class="module-title">⚠️ SafetyAI — Workplace Safety Monitor</h2>
+                    <p class="module-description">Real-time hazard detection and incident logging</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-left">
+                        <canvas id="safetyCanvas" class="pose-canvas"></canvas>
+                        <div class="zone-controls" id="zoneControls" style="display: none;">
+                            <button class="zone-btn" id="drawZoneBtn">Draw Danger Zone</button>
+                            <button class="zone-btn" id="clearZoneBtn">Clear Zone</button>
+                        </div>
+                    </div>
+                    
+                    <div class="module-right">
+                        <div class="safety-dashboard">
+                            <div class="danger-gauge">
+                                <div class="gauge-value">
+                                    <span id="safetyLevel">0</span>
+                                    <span class="gauge-percent">%</span>
+                                </div>
+                                <div class="gauge-label">Safety Score</div>
+                            </div>
+
+                            <div class="safety-metrics">
+                                <div class="metric alert">
+                                    <span class="metric-label">Risk Level</span>
+                                    <span class="metric-value" id="riskLevel">LOW</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Incidents Today</span>
+                                    <span class="metric-value" id="incidentCount">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Workers in Frame</span>
+                                    <span class="metric-value" id="workerCount">0</span>
+                                </div>
+                            </div>
+
+                            <div class="hazard-alerts" id="hazardAlerts">
+                                <h4>Active Alerts</h4>
+                                <div id="alertsList"></div>
+                            </div>
+
+                            <div class="safety-session-controls">
+                                <button class="control-btn" id="safetyStartBtn">▶ Start Monitoring</button>
+                                <button class="control-btn secondary" id="safetyClearBtn">🗑️ Clear Log</button>
+                            </div>
+                        </div>
+
+                        <div class="incident-log">
+                            <h4>Incident Log</h4>
+                            <div class="log-table" id="incidentLogTable">
+                                <div class="log-header">
+                                    <span>Time</span>
+                                    <span>Type</span>
+                                    <span>Details</span>
+                                </div>
+                                <div id="logEntries"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module 4: SportsVision -->
+            <section class="module-view" id="sports-module" style="display: none;">
+                <div class="module-header">
+                    <h2 class="module-title">🏆 SportsVision — Performance Analyzer</h2>
+                    <p class="module-description">Advanced biomechanical analysis and metrics</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-left">
+                        <canvas id="sportsCanvas" class="pose-canvas"></canvas>
+                    </div>
+                    
+                    <div class="module-right">
+                        <div class="sports-dashboard">
+                            <div class="test-selector">
+                                <h4>Select Performance Test</h4>
+                                <div class="test-buttons">
+                                    <button class="test-btn" data-test="jump">🤾 Jump Height</button>
+                                    <button class="test-btn" data-test="reaction">⚡ Reaction Time</button>
+                                    <button class="test-btn" data-test="batting">🏏 Batting Stance</button>
+                                    <button class="test-btn" data-test="running">🏃 Running Form</button>
+                                </div>
+                            </div>
+
+                            <div class="performance-metric">
+                                <h4 id="metricTitle">Jump Height</h4>
+                                <div class="metric-display" id="metricDisplay">
+                                    <span class="metric-value" id="performanceValue">0</span>
+                                    <span class="metric-unit" id="metricUnit">cm</span>
+                                </div>
+                            </div>
+
+                            <div class="performance-feedback" id="performanceFeedback">
+                                <p id="feedbackText">Ready to begin...</p>
+                            </div>
+
+                            <div class="sports-session-controls">
+                                <button class="control-btn" id="sportsStartBtn">▶ Start Test</button>
+                                <button class="control-btn secondary" id="sportsReplayBtn" style="display: none;">🔁 Replay</button>
+                            </div>
+
+                            <div class="personal-records" id="personalRecords">
+                                <h4>Personal Records</h4>
+                                <div id="prList"></div>
+                            </div>
+
+                            <div class="comparison" id="comparisonPanel" style="display: none;">
+                                <h4>Today vs Best</h4>
+                                <div id="comparisonContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module 5: PosePlay (Games) -->
+            <section class="module-view" id="games-module" style="display: none;">
+                <div class="module-header">
+                    <h2 class="module-title">🎮 PosePlay — Interactive Games</h2>
+                    <p class="module-description">Fun games powered by pose detection</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-left">
+                        <canvas id="gamesCanvas" class="pose-canvas"></canvas>
+                        <div class="target-display" id="targetDisplay"></div>
+                    </div>
+                    
+                    <div class="module-right">
+                        <div class="games-dashboard">
+                            <div class="game-selector">
+                                <h4>Select Game</h4>
+                                <div class="game-buttons">
+                                    <button class="game-btn" data-game="balloon">🎈 Balloon Pop</button>
+                                    <button class="game-btn" data-game="shadow">👤 Shadow Clone</button>
+                                    <button class="game-btn" data-game="freeze">❄️ Freeze Dance</button>
+                                    <button class="game-btn" data-game="laser">⚡ Laser Dodge</button>
+                                    <button class="game-btn" data-game="mirror">🪞 Pose Mirror</button>
+                                </div>
+                            </div>
+
+                            <div class="game-score">
+                                <div class="score-display">
+                                    <div class="score-value" id="gameScore">0</div>
+                                    <div class="score-label" id="scoreLabel">Score</div>
+                                </div>
+                            </div>
+
+                            <div class="game-status" id="gameStatus">
+                                <p id="gameMessage">Select a game to begin</p>
+                                <div class="freeze-countdown" id="freezeCountdownDisplay" style="display:none;">Dance!</div>
+                                <div class="laser-lives" id="laserLivesDisplay" style="display:none;">Lives: ❤️❤️❤️</div>
+                            </div>
+
+                            <div class="game-controls">
+                                <button class="control-btn" id="gameStartBtn">▶ Start Game</button>
+                                <button class="control-btn secondary" id="gameResetBtn">↻ Reset</button>
+                            </div>
+
+
+
+                            <div class="leaderboard" id="leaderboard">
+                                <h4>Top Scores</h4>
+                                <div id="leaderboardList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="closeSettingsBtn">&times;</button>
+            </div>
+
+            <div class="settings-group">
+                <label>Camera</label>
+                <select id="cameraSelect">
+                    <option value="0">Default Camera</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label>Resolution</label>
+                <select id="resolutionSelect">
+                    <option value="480">480p (Fast)</option>
+                    <option value="720">720p (Default)</option>
+                    <option value="1080">1080p (Slow)</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label>Confidence Threshold</label>
+                <div class="slider-container">
+                    <input type="range" id="confidenceSlider" min="0.1" max="0.9" step="0.1" value="0.3">
+                    <span id="confidenceValue">0.3</span>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label>Skeleton Style</label>
+                <select id="skeletonStyle">
+                    <option value="neon">Neon</option>
+                    <option value="classic">Classic</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+
+            <div class="settings-group checkbox">
+                <input type="checkbox" id="mirrorToggle" checked>
+                <label for="mirrorToggle">Mirror Camera</label>
+            </div>
+
+            <div class="settings-group checkbox">
+                <input type="checkbox" id="debugToggle">
+                <label for="debugToggle">Debug Mode (D key)</label>
+            </div>
+
+            <div class="settings-group">
+                <label>Language</label>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="ta">Tamil</option>
+                    <option value="hi">Hindi</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <label>Theme</label>
+                <select id="themeSelect">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+
+            <div class="settings-actions">
+                <button class="btn-secondary" id="resetSettingsBtn">Reset Defaults</button>
+                <button class="btn-primary" id="closeSettingsBtn2">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Error Toast -->
+    <div class="toast" id="errorToast"></div>
+
+    <!-- MediaPipe Pose only — no TF.js conflict -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <!-- Tone.js for Music -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <!-- Three.js for 3D Visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Local Scripts -->
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/error-handler.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/3d_renderer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/hymn_player.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile_webcam.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pose_engine.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/posture.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/fitness.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/safety.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/sports.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/games.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/error-fixes.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/camera-guide.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-test.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/verification.js') }}"></script>
+
+    <script>
+        // ── Toast ────────────────────────────────────────────────────
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('errorToast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
+        window.showToast = showToast;
+
+        // ── Navigation ───────────────────────────────────────────────
+        function initNavigation() {
+            const navTabs    = document.querySelectorAll('.nav-tab');
+            const allModules = document.querySelectorAll('.module-view');
+
+            function switchTo(name) {
+                allModules.forEach(v => v.style.display = 'none');
+                navTabs.forEach(t => t.classList.remove('active'));
+                const el = document.getElementById(name + '-module');
+                if (el) el.style.display = (name === 'landing') ? 'flex' : 'block';
+                const tab = document.querySelector(`[data-module="${name}"]`);
+                if (tab) tab.classList.add('active');
+                // Show/hide camera area
+                const camArea = document.getElementById('mainCameraArea');
+                if (camArea) camArea.style.display = (name === 'landing') ? 'none' : 'flex';
+                if (window.ModuleManager) window.ModuleManager.onModuleSwitch(name);
+            }
+
+            navTabs.forEach(tab =>
+                tab.addEventListener('click', () => switchTo(tab.dataset.module))
+            );
+            document.querySelectorAll('.feature-card').forEach(card =>
+                card.addEventListener('click', () => switchTo(card.dataset.module))
+            );
+            document.getElementById('startCameraBtn').addEventListener('click', () => switchTo('posture'));
+
+            // Set Home active by default
+            document.querySelector('[data-module="landing"]').classList.add('active');
+        }
+
+        // ── Settings ─────────────────────────────────────────────────
+        function initSettings() {
+            const modal   = document.getElementById('settingsModal');
+            const overlay = document.getElementById('modalOverlay');
+
+            const open  = () => { modal.classList.add('active');    overlay.classList.add('active'); };
+            const close = () => { modal.classList.remove('active'); overlay.classList.remove('active'); };
+
+            document.getElementById('settingsBtn').addEventListener('click', open);
+            overlay.addEventListener('click', close);
+            document.querySelectorAll('#closeSettingsBtn, #closeSettingsBtn2')
+                    .forEach(b => b.addEventListener('click', close));
+
+            document.getElementById('confidenceSlider').addEventListener('input', e => {
+                document.getElementById('confidenceValue').textContent = e.target.value;
+                poseEngine.setConfidence(parseFloat(e.target.value));
+            });
+
+            document.getElementById('skeletonStyle').addEventListener('change', e => {
+                poseEngine.setStyle(e.target.value);
+            });
+
+            document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+                document.getElementById('resolutionSelect').value  = '720';
+                document.getElementById('confidenceSlider').value  = 0.3;
+                document.getElementById('confidenceValue').textContent = '0.3';
+                document.getElementById('skeletonStyle').value     = 'neon';
+                document.getElementById('mirrorToggle').checked    = true;
+                document.getElementById('debugToggle').checked     = false;
+                poseEngine.setConfidence(0.3);
+                poseEngine.setStyle('neon');
+                localStorage.clear();
+                showToast('Settings reset!');
+            });
+        }
+
+        // ── FPS counter ──────────────────────────────────────────────
+        let _fpsCount = 0, _fpsLast = Date.now();
+        function tickFPS() {
+            _fpsCount++;
+            const now = Date.now();
+            if (now - _fpsLast >= 1000) {
+                document.getElementById('fpsBadge').textContent =
+                    Math.round((_fpsCount * 1000) / (now - _fpsLast)) + ' FPS';
+                _fpsCount = 0;
+                _fpsLast  = now;
+            }
+        }
+
+        // ── Single-pass draw — initialized after DOM ready ───────────
+        let _mainCanvas = null, _mainCtx = null, _video = null;
+
+        function onPoseResults(pose) {
+            tickFPS();
+            
+            // Use mobile canvas if connected, otherwise use video
+            const isMobileConnected = window.mobileWebcam && window.mobileWebcam.isConnected;
+            const source = isMobileConnected ? window.mobileWebcam.getCanvas() : _video;
+            
+            if (!_mainCtx || !source) {
+                if (window.ModuleManager) window.ModuleManager.updatePose(pose);
+                return;
+            }
+            
+            // Get dimensions from source
+            const srcWidth = isMobileConnected ? source.width : (source.videoWidth || 0);
+            const srcHeight = isMobileConnected ? source.height : (source.videoHeight || 0);
+            
+            if (!srcWidth || !srcHeight) {
+                if (window.ModuleManager) window.ModuleManager.updatePose(pose);
+                return;
+            }
+            
+            // Sync canvas size to source
+            if (_mainCanvas.width !== srcWidth) _mainCanvas.width = srcWidth;
+            if (_mainCanvas.height !== srcHeight) _mainCanvas.height = srcHeight;
+
+            const mirror = document.getElementById('mirrorToggle').checked;
+            // Single save/restore — video + skeleton in one pass
+            _mainCtx.clearRect(0, 0, _mainCanvas.width, _mainCanvas.height);
+            _mainCtx.save();
+            if (mirror) { _mainCtx.scale(-1, 1); _mainCtx.translate(-_mainCanvas.width, 0); }
+            _mainCtx.drawImage(source, 0, 0);
+            if (poseEngine.skeletonStyle !== 'none' && pose) poseEngine.drawSkeleton(_mainCanvas, [pose]);
+            _mainCtx.restore();
+
+            document.getElementById('cameraStatus').style.background =
+                pose ? 'rgba(0,255,136,0.2)' : 'rgba(255,51,102,0.2)';
+            if (window.ModuleManager) window.ModuleManager.updatePose(pose);
+        }
+
+        // ── Boot ─────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', async () => {
+            initNavigation();
+            initSettings();
+
+            const loadScreen = document.getElementById('loading-screen');
+            const permScreen = document.getElementById('permission-screen');
+            const landing    = document.getElementById('landing-module');
+
+            // Show loading, hide landing
+            landing.style.display    = 'none';
+            loadScreen.style.display = 'flex';
+            document.getElementById('loadingMessage').textContent = 'Requesting camera...';
+
+            // Init canvas refs after DOM ready
+            _mainCanvas = document.getElementById('canvas');
+            _video      = document.getElementById('webcam');
+            _mainCtx    = _mainCanvas ? _mainCanvas.getContext('2d') : null;
+            
+            // Initialize mobile webcam
+            if (window.mobileWebcam) {
+                window.mobileWebcam.init(_video);
+            }
+
+            try {
+                // 1. getUserMedia — no Camera utility, no double stream
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+                    audio: false
+                });
+                _video.srcObject = stream;
+                await new Promise((res, rej) => {
+                    _video.onloadedmetadata = res;
+                    _video.onerror = rej;
+                    setTimeout(res, 3000);
+                });
+                await _video.play();
+
+                document.getElementById('loadingMessage').textContent = 'Loading MediaPipe Pose (Lite)...';
+                document.getElementById('loadingProgress').style.width = '50%';
+
+                // 2. rAF loop — no Camera utility conflict
+                await poseEngine.init(_video, onPoseResults);
+
+                document.getElementById('loadingProgress').style.width = '100%';
+                await new Promise(r => setTimeout(r, 200));
+
+                // 3. Show landing; mainCameraArea hidden until module selected
+                loadScreen.style.display = 'none';
+                landing.style.display    = 'flex';
+
+            } catch (err) {
+                console.error('Init error:', err);
+                loadScreen.style.display = 'none';
+                permScreen.style.display = 'flex';
+            }
+
+            // Retry button
+            document.getElementById('requestCameraBtn').addEventListener('click', () => location.reload());
+        });
+
+        // ── Keyboard shortcuts ───────────────────────────────────────
+        document.addEventListener('keydown', e => {
+            const k = e.key.toLowerCase();
+            if (k >= '1' && k <= '5') {
+                const mods = ['posture','fitness','safety','sports','games'];
+                document.querySelector(`[data-module="${mods[+k-1]}"]`)?.click();
+            }
+            if (k === 'm') {
+                const m = document.getElementById('mirrorToggle');
+                m.checked = !m.checked;
+            }
+            if (k === 's') {
+                const sel = document.getElementById('skeletonStyle');
+                const styles = ['neon','classic','minimal','none'];
+                sel.value = styles[(styles.indexOf(sel.value) + 1) % styles.length];
+                poseEngine.setStyle(sel.value);
+            }
+            if (k === 'f') document.documentElement.requestFullscreen().catch(()=>{});
+            if (k === ' ') {
+                e.preventDefault();
+                const v = document.getElementById('webcam');
+                v.paused ? v.play() : v.pause();
+            }
+            if (k === 'd') document.getElementById('debugToggle').click();
+        });
+    </script>
+</body>
+</html>

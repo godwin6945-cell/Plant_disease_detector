@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pose_env/
+venv/
+ENV/
+env/
+
+# Flask
+instance/
+*.db
+*.sqlite
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data
+data/*.json
+data/*.csv
+
+# Environment
+.env
